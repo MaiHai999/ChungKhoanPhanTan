@@ -7,7 +7,7 @@ Base = declarative_base()
 class NHANVIEN(Base):
     __tablename__ = 'NHANVIEN'
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)
+    ID = Column(Integer, primary_key=True)
     HO = Column(String(30))
     TEN = Column(String(30))
     NGAYSINH = Column(DateTime)

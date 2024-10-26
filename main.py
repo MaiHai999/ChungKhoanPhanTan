@@ -8,12 +8,14 @@ from flask import jsonify
 from flask_cors import CORS
 
 from Source.Controller.AccountController import auth_blueprint
+from Source.Controller.EmployeeController import employee_blueprint
 
 
 app = Flask(__name__)
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 CORS(app)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
+app.register_blueprint(employee_blueprint, url_prefix='/employee')
 app.secret_key = os.environ.get("SECRET_KEY")
 
 app.config["JWT_SECRET_KEY"] = os.environ.get("SECRET_KEY_JWT")
