@@ -13,6 +13,7 @@ from Source.Utiles.CustomResponse import *
 from Source.Service.Models import *
 from Source.Utiles.HandleExceptions import *
 from Source.Utiles.CommonUtiles import *
+from Source.Utiles.MyConnect import *
 
 employee_blueprint = Blueprint('employee', __name__)
 
@@ -37,7 +38,10 @@ def addEmployee():
     try:
         sessionDB.commit()
     except Exception as e:
+        print(e)
         sessionDB.rollback()
+        response = InternalServerErrorResponse()
+        return response.toResponse()
     finally:
         sessionDB.close()
 
@@ -50,6 +54,7 @@ def addEmployee():
 @jwt_required()
 def deleteEmployee():
     identity = get_jwt_identity()
+    severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
     sessionDB = CommonUtiles.getSessionDB(identity)
     idnv = request.json.get('IDNV')
 
@@ -57,9 +62,27 @@ def deleteEmployee():
     sessionDB.delete(nhanVien)
 
     try:
+        #Tìm login name
+        myDBmanager = MyConnect(user=userName, password=passWord, database="CHUNGKHOAN", server=severName)
+        lgname = myDBmanager.callSP("SP_LAYLOGINNAME", {"username": idnv})
+        if len(lgname) == 0:
+            lgname1 = None
+        else:
+            lgname1 = lgname[0][0]
+
+        # Xóa login name
+        params = {
+            "lgname": lgname1,
+            "usrname": idnv,
+        }
+        myDBmanager.callSP("SP_XOALOGIN", params)
+
         sessionDB.commit()
     except Exception as e:
+        print(e)
         sessionDB.rollback()
+        response = InternalServerErrorResponse()
+        return response.toResponse()
     finally:
         sessionDB.close()
 
@@ -94,7 +117,10 @@ def updateEmployee():
     try:
         sessionDB.commit()
     except Exception as e:
+        print(e)
         sessionDB.rollback()
+        response = InternalServerErrorResponse()
+        return response.toResponse()
     finally:
         sessionDB.close()
 

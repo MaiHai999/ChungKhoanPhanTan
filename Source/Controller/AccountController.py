@@ -83,7 +83,6 @@ def login():
     else:
         raise ValueError("Sai mật khẩu")
 
-
 @auth_blueprint.route('/getLoginName' , methods=['POST','GET'])
 @handle_exceptions
 @jwt_required()
@@ -110,7 +109,6 @@ def getLoginName():
     response = SuccessResponse(data=data)
     return response.toResponse()
 
-
 @auth_blueprint.route('/createLogin' , methods=['POST','GET'])
 @handle_exceptions
 @jwt_required()
@@ -118,14 +116,14 @@ def createLogin():
     identity = get_jwt_identity()
     severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
     lgname = request.json.get('lgname')
-    passWord = request.json.get('passWord')
+    passWord1 = request.json.get('passWord')
     username = request.json.get('username')
 
     spName = "SP_TAOLOGIN"
 
     params = {
         "lgname": lgname,
-        "pass": passWord,
+        "pass": passWord1,
         "username": username,
         "role": "CongTy" if severName != os.environ.get("SEVER_NAME_CONGTY_HNX") else "SoGD"
     }
@@ -136,5 +134,29 @@ def createLogin():
 
     response = SuccessResponse()
     return response.toResponse()
+
+@auth_blueprint.route('/deleteLogin' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def deleteLogin():
+    identity = get_jwt_identity()
+    severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
+    lgname = request.json.get('lgname')
+    usrname = request.json.get('username')
+
+    spName = "SP_XOALOGIN"
+
+    params = {
+        "lgname": lgname,
+        "usrname": usrname,
+    }
+
+    myDBmanager = MyConnect(user=userName, password=passWord, database="CHUNGKHOAN", server=severName)
+    result = myDBmanager.callSP(spName, params)
+    print(result)
+
+    response = SuccessResponse()
+    return response.toResponse()
+
 
 
