@@ -29,10 +29,10 @@ def addEmployee():
     gioiTinh = request.json.get('gioiTinh')
     sdt = request.json.get('sdt')
     daNghiViec = request.json.get('daNghiViec')
-    idCongTy = "010" if identity["severName"] == os.environ.get("SEVER_NAME_CONGTY_010") else "020"
     sessionDB = CommonUtiles.getSessionDB(identity)
+    congty = sessionDB.query(CONGTYCK).first()
 
-    nhanVien = NHANVIEN(HO=ho, TEN=ten, NGAYSINH=ngaySinh, DIACHI=diaChi, GIOITINH=gioiTinh, SDT=sdt, IDCONGTY= idCongTy, DANGHIVIEC=daNghiViec)
+    nhanVien = NHANVIEN(HO=ho, TEN=ten, NGAYSINH=ngaySinh, DIACHI=diaChi, GIOITINH=gioiTinh, SDT=sdt, IDCONGTY= congty.ID, DANGHIVIEC=daNghiViec)
     CommonUtiles.addCustom(nhanVien, sessionDB)
 
     try:
@@ -142,7 +142,7 @@ def getEmployee():
             "ID": nhanVien.ID,
             "HO": nhanVien.HO,
             "TEN": nhanVien.TEN,
-            "NGAYSINH": nhanVien.NGAYSINH,
+            "NGAYSINH": nhanVien.NGAYSINH.strftime("%Y-%m-%d %H:%M:%S") if nhanVien.NGAYSINH else None,
             "DIACHI": nhanVien.DIACHI,
             "GIOITINH": nhanVien.GIOITINH,
             "SDT": nhanVien.SDT,
@@ -150,7 +150,6 @@ def getEmployee():
             "DANGHIVIEC": nhanVien.DANGHIVIEC
         }
         nhanVien_dicts.append(nhanVien_dict)
-
 
     response = SuccessResponse(data=nhanVien_dicts)
     return response.toResponse()

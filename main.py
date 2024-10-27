@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 from Source.Controller.AccountController import auth_blueprint
 from Source.Controller.EmployeeController import employee_blueprint
+from Source.Controller.NDTController import ndt_blueprint
 
 
 app = Flask(__name__)
@@ -16,10 +17,11 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 CORS(app)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(employee_blueprint, url_prefix='/employee')
+app.register_blueprint(ndt_blueprint, url_prefix='/ndt')
 app.secret_key = os.environ.get("SECRET_KEY")
 
 app.config["JWT_SECRET_KEY"] = os.environ.get("SECRET_KEY_JWT")
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 
 jwt = JWTManager(app)
