@@ -49,3 +49,16 @@ class CommonUtiles:
 
         sql = f"INSERT INTO [{table_name}] ({columns_str}) VALUES ({placeholders_str})"
         sessionDB.execute(text(sql), values)
+
+    @staticmethod
+    def getInfoLogin(identity):
+        severName = identity["severName"]
+        role = identity["role"]
+        userID = identity["userID"]
+        userName = identity["userName"]
+        passWord = identity["passWord"]
+
+        return severName, role, userID, userName, passWord
+
+
+

@@ -22,8 +22,6 @@ class MyConnectPro:
         with self.engine.connect() as connection:
             connection.execute(text("SELECT 1"))
 
-
-
     def getSession(self):
         session = self.Session()
         return session
@@ -38,9 +36,7 @@ class MyConnectPro:
         finally:
             session.close()
 
-    def fetchAllFromTable(self, table_name):
-        query = f"SELECT * FROM {table_name}"
-        return self.executeQuery(query)
+
 
 
 

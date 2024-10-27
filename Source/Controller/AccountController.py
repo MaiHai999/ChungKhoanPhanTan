@@ -12,8 +12,10 @@ from flask import abort, redirect
 
 from Source.Utiles.CustomResponse import *
 from Source.Utiles.MyConnectPro import *
+from Source.Utiles.MyConnect import *
 from Source.Service.Models import *
 from Source.Utiles.HandleExceptions import *
+from Source.Utiles.CommonUtiles import *
 
 
 import os
@@ -80,4 +82,59 @@ def login():
         return response.toResponse()
     else:
         raise ValueError("Sai mật khẩu")
+
+
+@auth_blueprint.route('/getLoginName' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def getLoginName():
+    identity = get_jwt_identity()
+    severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
+    idnv = request.json.get('IDNV')
+    param = {
+        "username" : idnv
+    }
+
+    myDBmanager = MyConnect(user=userName, password=passWord, database="CHUNGKHOAN", server=severName)
+    severnamePro = myDBmanager.callSP("SP_LAYLOGINNAME", param)
+
+    if len(severnamePro) == 0:
+        severname = None
+    else:
+        severname = severnamePro[0][0]
+
+    data = {
+        "userName" : severname
+    }
+
+    response = SuccessResponse(data=data)
+    return response.toResponse()
+
+
+@auth_blueprint.route('/createLogin' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def createLogin():
+    identity = get_jwt_identity()
+    severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
+    lgname = request.json.get('lgname')
+    passWord = request.json.get('passWord')
+    username = request.json.get('username')
+
+    spName = "SP_TAOLOGIN"
+
+    params = {
+        "lgname": lgname,
+        "pass": passWord,
+        "username": username,
+        "role": "CongTy" if severName != os.environ.get("SEVER_NAME_CONGTY_HNX") else "SoGD"
+    }
+
+    myDBmanager = MyConnect(user=userName, password=passWord, database="CHUNGKHOAN", server=severName)
+    result = myDBmanager.callSP(spName, params)
+    print(result)
+
+    response = SuccessResponse()
+    return response.toResponse()
+
 
