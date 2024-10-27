@@ -55,7 +55,6 @@ def addNDT():
     sessionDB = CommonUtiles.getSessionDB(identity)
     congty = sessionDB.query(CONGTYCK).first()
 
-
     response = SuccessResponse()
     return response.toResponse()
 
