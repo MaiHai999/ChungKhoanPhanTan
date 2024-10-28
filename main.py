@@ -11,6 +11,7 @@ from Source.Controller.AccountController import auth_blueprint
 from Source.Controller.EmployeeController import employee_blueprint
 from Source.Controller.NDTController import ndt_blueprint
 from Source.Controller.BankController import bank_blueprint
+from Source.Controller.StockController import stock_blueprint
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(employee_blueprint, url_prefix='/employee')
 app.register_blueprint(ndt_blueprint, url_prefix='/ndt')
 app.register_blueprint(bank_blueprint, url_prefix='/bank')
+app.register_blueprint(stock_blueprint, url_prefix='/stock')
 app.secret_key = os.environ.get("SECRET_KEY")
 
 app.config["JWT_SECRET_KEY"] = os.environ.get("SECRET_KEY_JWT")

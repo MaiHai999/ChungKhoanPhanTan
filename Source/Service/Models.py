@@ -24,18 +24,6 @@ class CONGTYCK(Base):
     ID = Column(String, primary_key=True)
     TENCONGTY = Column(String)
 
-class COPHIEU(Base):
-    __tablename__ = 'COPHIEU'
-
-    MACP = Column(String(6), primary_key=True)  # Mã cổ phiếu
-    TENCONGTY = Column(String(100))  # Tên công ty
-    DIACHI = Column(String(100))  # Địa chỉ
-    SDT = Column(String(10))  # Số điện thoại
-    FAX = Column(String(100))  # Số fax
-    EMAIL = Column(String(100))  # Email
-    TONGSOLUONGCP = Column(Integer)  # Tổng số lượng cổ phiếu
-    IDSAN = Column(String(15), ForeignKey('SANGIAODICH.ID', ondelete='CASCADE', onupdate='CASCADE'))  # ID sàn giao dịch
-
 class CTDANHMUC(Base):
     __tablename__ = 'CTDANHMUC'
 
@@ -44,6 +32,18 @@ class CTDANHMUC(Base):
     GIATRI = Column(Float)
     NGAY = Column(DateTime)
     ID = Column(Integer, primary_key=True, autoincrement=True)
+
+class COPHIEU(Base):
+    __tablename__ = 'COPHIEU'
+
+    MACP = Column(String(6), primary_key=True)
+    TENCONGTY = Column(String(100))
+    DIACHI = Column(String(100))
+    SDT = Column(String(10))
+    FAX = Column(String(100))
+    EMAIL = Column(String(100))
+    TONGSOLUONGCP = Column(Integer)
+    IDSAN = Column(String(15))
 
 class LENHDAT(Base):
     __tablename__ = 'LENHDAT'
@@ -70,12 +70,12 @@ class LENHKHOP(Base):
 
 class LICHSUGIA(Base):
     __tablename__ = 'LICHSUGIA'
-
+    NGAY = Column(DateTime)
     GIASAN = Column(Float)
     GIATRAN = Column(Float)
     GIATHAMCHIEU = Column(Float)
-    IDNGAY = Column(Integer, primary_key=True)
-    IDCOPHIEU = Column(String(6), primary_key=True)
+    ID = Column(Integer, primary_key=True)
+    IDCOPHIEU = Column(String(6))
 
 class NDT(Base):
     __tablename__ = 'NDT'
@@ -116,15 +116,6 @@ class TAIKHOANNGANHANG(Base):
 
     #Quan hệ
     banks = relationship("NGANHANG", back_populates="accounts")
-
-
-
-
-class NGAY(Base):
-    __tablename__ = 'NGAY'
-
-    ID = Column(Integer, primary_key=True, autoincrement=True)  # ID ngày
-    GIATRI = Column(DateTime)  # Giá trị ngày
 
 class NHANVIENSAN(Base):
     __tablename__ = 'NHANVIENSAN'
