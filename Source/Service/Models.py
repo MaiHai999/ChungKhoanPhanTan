@@ -94,11 +94,31 @@ class NDT(Base):
     IDCONGTY = Column(String(10))
     MATKHAUDATLENH = Column(String(20))
 
+
 class NGANHANG(Base):
     __tablename__ = 'NGANHANG'
 
-    ID = Column(Integer, primary_key=True, autoincrement=True)  # ID ngân hàng
-    TENNGANHANG = Column(String(100))  # Tên ngân hàng
+    ID = Column(Integer, primary_key=True, autoincrement=True)
+    TENNGANHANG = Column(String(100))
+
+    #Quan hệ
+    accounts = relationship("TAIKHOANNGANHANG", back_populates="banks")
+
+
+class TAIKHOANNGANHANG(Base):
+    __tablename__ = 'TAIKHOANNGANHANG'
+
+    MATK = Column(String(15), primary_key=True)
+    TENTAIKHOAN = Column(String(30))
+    IDNDT = Column(Integer)
+    IDNGANHANG = Column(Integer, ForeignKey('NGANHANG.ID'))
+    SODU = Column(Float)
+
+    #Quan hệ
+    banks = relationship("NGANHANG", back_populates="accounts")
+
+
+
 
 class NGAY(Base):
     __tablename__ = 'NGAY'
@@ -132,15 +152,6 @@ class SOHUUCOPHIEU(Base):
     SOLUONG = Column(Integer)                     # Số lượng cổ phiếu
     NGAYMUA = Column(DateTime)                    # Ngày mua
     rowguid = Column(String(36), nullable=False)  # GUID
-
-class TAIKHOANNGANHANG(Base):
-    __tablename__ = 'TAIKHOANNGANHANG'
-
-    MATK = Column(String(15), primary_key=True)    # Mã tài khoản
-    TENTAIKHOAN = Column(String(30))
-    IDNDT = Column(Integer)
-    IDNGANHANG = Column(Integer)
-    SODU = Column(Float)
 
 class THAYDOIGIADANHMUC(Base):
     __tablename__ = 'THAYDOIGIADANHMUC'
