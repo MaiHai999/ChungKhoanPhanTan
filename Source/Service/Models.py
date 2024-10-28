@@ -45,6 +45,22 @@ class COPHIEU(Base):
     TONGSOLUONGCP = Column(Integer)
     IDSAN = Column(String(15))
 
+    # Quan hệ
+    prices = relationship("LICHSUGIA", back_populates="stock")
+
+class LICHSUGIA(Base):
+    __tablename__ = 'LICHSUGIA'
+    NGAY = Column(DateTime)
+    GIASAN = Column(Float)
+    GIATRAN = Column(Float)
+    GIATHAMCHIEU = Column(Float)
+    ID = Column(Integer, primary_key=True)
+    IDCOPHIEU = Column(String(6), ForeignKey('COPHIEU.MACP'))
+
+    # Quan hệ
+    stock = relationship("COPHIEU", back_populates="prices")
+
+
 class LENHDAT(Base):
     __tablename__ = 'LENHDAT'
 
@@ -67,15 +83,6 @@ class LENHKHOP(Base):
     SOLUONGKHOP = Column(Integer)
     GIAKHOP = Column(Float)
     PHI = Column(Float)
-
-class LICHSUGIA(Base):
-    __tablename__ = 'LICHSUGIA'
-    NGAY = Column(DateTime)
-    GIASAN = Column(Float)
-    GIATRAN = Column(Float)
-    GIATHAMCHIEU = Column(Float)
-    ID = Column(Integer, primary_key=True)
-    IDCOPHIEU = Column(String(6))
 
 class NDT(Base):
     __tablename__ = 'NDT'
