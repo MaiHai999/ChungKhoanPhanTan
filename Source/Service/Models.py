@@ -71,7 +71,7 @@ class LENHDAT(Base):
     SOLUONG = Column(Integer)
     TRANGTHAI = Column(String(20))
     NGAYDATLENH = Column(DateTime)
-    GIA = Column(Float)  # Giá
+    GIA = Column(Float)
     ID = Column(Integer, primary_key=True, autoincrement=True)
 
 class LENHKHOP(Base):
@@ -145,11 +145,10 @@ class SANGIAODICH(Base):
 class SOHUUCOPHIEU(Base):
     __tablename__ = 'SOHUUCOPHIEU'
 
-    MACP = Column(String(6), primary_key=True)  # Mã cổ phiếu
-    MANDT = Column(Integer, primary_key=True)    # Mã nhà đầu tư
-    SOLUONG = Column(Integer)                     # Số lượng cổ phiếu
-    NGAYMUA = Column(DateTime)                    # Ngày mua
-    rowguid = Column(String(36), nullable=False)  # GUID
+    MACP = Column(String(6), primary_key=True)
+    MANDT = Column(Integer, primary_key=True)
+    SOLUONG = Column(Integer)
+
 
 class THAYDOIGIADANHMUC(Base):
     __tablename__ = 'THAYDOIGIADANHMUC'

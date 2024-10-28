@@ -141,3 +141,33 @@ def updateStock():
     response = SuccessResponse()
     return response.toResponse()
 
+
+
+@stock_blueprint.route('/getStockOfNDT', methods=['POST', 'GET'])
+@handle_exceptions
+@jwt_required()
+def getStockOfNDT():
+    identity = get_jwt_identity()
+    role = identity["role"]
+    sessionDB = CommonUtiles.getSessionDB(identity)
+
+    idndt = request.json.get('idNDT') if role == ROLE_NV else identity["userID"]
+
+    sohuuCp = sessionDB.query(SOHUUCOPHIEU).filter(SOHUUCOPHIEU.MANDT == idndt).all()
+    stock_list = [
+        {
+            "MACP": stock.MACP,
+            "MANDT": stock.MANDT,
+            "SOLUONG": stock.SOLUONG
+        }
+        for stock in sohuuCp
+    ]
+
+    response = SuccessResponse(data=stock_list)
+    return response.toResponse()
+
+
+
+
+
+

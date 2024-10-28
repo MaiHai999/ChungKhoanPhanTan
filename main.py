@@ -13,6 +13,7 @@ from Source.Controller.NDTController import ndt_blueprint
 from Source.Controller.BankController import bank_blueprint
 from Source.Controller.StockController import stock_blueprint
 from Source.Controller.PriceStockController import price_blueprint
+from Source.Controller.OrderController import order_blueprint
 
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ app.register_blueprint(ndt_blueprint, url_prefix='/ndt')
 app.register_blueprint(bank_blueprint, url_prefix='/bank')
 app.register_blueprint(stock_blueprint, url_prefix='/stock')
 app.register_blueprint(price_blueprint, url_prefix='/price')
+app.register_blueprint(order_blueprint, url_prefix='/order')
 app.secret_key = os.environ.get("SECRET_KEY")
 
 app.config["JWT_SECRET_KEY"] = os.environ.get("SECRET_KEY_JWT")

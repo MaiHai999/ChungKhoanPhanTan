@@ -38,8 +38,9 @@ def getBank():
 @jwt_required()
 def getBankAccount():
     identity = get_jwt_identity()
+    role = identity["role"]
     sessionDB = CommonUtiles.getSessionDB(identity)
-    idndt = request.json.get('idNDT')
+    idndt = request.json.get('idNDT') if role == ROLE_NV else identity["userID"]
     tknhs = sessionDB.query(TAIKHOANNGANHANG).filter(TAIKHOANNGANHANG.IDNDT == idndt).all()
     account_list = [
         {
@@ -134,4 +135,22 @@ def updateBankAccount():
     return response.toResponse()
 
 
+
+@bank_blueprint.route('/getTotalBalance' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def getTotalBalance():
+    identity = get_jwt_identity()
+    role = identity["role"]
+    sessionDB = CommonUtiles.getSessionDB(identity)
+    idndt = request.json.get('idNDT') if role == ROLE_NV else identity["userID"]
+    tknhs = sessionDB.query(TAIKHOANNGANHANG).filter(TAIKHOANNGANHANG.IDNDT == idndt).all()
+    total_balance = sum(account.SODU or 0 for account in tknhs)
+
+    data = {
+        "total" : total_balance
+    }
+
+    response = SuccessResponse(data=data)
+    return response.toResponse()
 
