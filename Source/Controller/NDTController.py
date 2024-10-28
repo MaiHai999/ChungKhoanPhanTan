@@ -34,7 +34,7 @@ def ndtToDict(ndt):
         "MATKHAUDATLENH": ndt.MATKHAUDATLENH
     }
 
-@ndt_blueprint.route('/get' , methods=['POST','GET'])
+@ndt_blueprint.route('/getNDT' , methods=['POST','GET'])
 @handle_exceptions
 @jwt_required()
 def getNDT():
@@ -55,7 +55,96 @@ def addNDT():
     sessionDB = CommonUtiles.getSessionDB(identity)
     congty = sessionDB.query(CONGTYCK).first()
 
+    ho = request.json.get('ho')
+    ten = request.json.get('ten')
+    ngaysinh = request.json.get('ngaysinh')
+    noisinh = request.json.get('noisinh')
+    gioitinh = request.json.get('gioitinh')
+    diachi = request.json.get('diachi')
+    email = request.json.get('email')
+    cmnd = request.json.get('cmnd')
+    ngaycap = request.json.get('ngaycap')
+    matkhau = request.json.get('matkhau')
+    idcongty = congty.ID
+    matkhaudatlenh = request.json.get('matkhaudatlenh')
+
+    nhadautu = NDT(
+        HO=ho,
+        TEN=ten,
+        NGAYSINH=ngaysinh,
+        NOISINH=noisinh,
+        GIOITINH=gioitinh,
+        DIACHI=diachi,
+        EMAIL=email,
+        CMND=cmnd,
+        NGAYCAP=ngaycap,
+        MATKHAU=matkhau,
+        IDCONGTY=idcongty,
+        MATKHAUDATLENH=matkhaudatlenh
+    )
+
+    CommonUtiles.addCustom(nhadautu, sessionDB)
+    sessionDB.commit()
+    sessionDB.close()
+
     response = SuccessResponse()
     return response.toResponse()
+
+
+@ndt_blueprint.route('/delete' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def deleteNDT():
+    identity = get_jwt_identity()
+    sessionDB = CommonUtiles.getSessionDB(identity)
+    idNDT = request.json.get('idNDT')
+    nhadaut = sessionDB.query(NDT).filter(NDT.MATK == idNDT).first()
+    sessionDB.delete(nhadaut)
+    sessionDB.commit()
+
+    response = SuccessResponse()
+    return response.toResponse()
+
+
+@ndt_blueprint.route('/update' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def dupdateNDT():
+    identity = get_jwt_identity()
+    sessionDB = CommonUtiles.getSessionDB(identity)
+
+    idNDT = request.json.get('idNDT')
+    ho = request.json.get('ho')
+    ten = request.json.get('ten')
+    ngaysinh = request.json.get('ngaysinh')
+    noisinh = request.json.get('noisinh')
+    gioitinh = request.json.get('gioitinh')
+    diachi = request.json.get('diachi')
+    email = request.json.get('email')
+    cmnd = request.json.get('cmnd')
+    ngaycap = request.json.get('ngaycap')
+    matkhau = request.json.get('matkhau')
+    matkhaudatlenh = request.json.get('matkhaudatlenh')
+
+    nhadaut = sessionDB.query(NDT).filter(NDT.MATK == idNDT).first()
+    nhadaut.Ho = ho
+    nhadaut.TEN = ten
+    nhadaut.NGAYSINH = ngaysinh
+    nhadaut.NOISINH = noisinh
+    nhadaut.GIOITINH = gioitinh
+    nhadaut.DIACHI = diachi
+    nhadaut.EMAIL = email
+    nhadaut.CMND = cmnd
+    nhadaut.NGAYCAP = ngaycap
+    nhadaut.MATKHAU = matkhau
+    nhadaut.MATKHAUDATLENH = matkhaudatlenh
+
+    sessionDB.commit()
+    sessionDB.close()
+
+    response = SuccessResponse()
+    return response.toResponse()
+
+
 
 
