@@ -60,6 +60,7 @@ def deleteEmployee():
 
     nhanVien = sessionDB.query(NHANVIEN).filter(NHANVIEN.ID == idnv).first()
     sessionDB.delete(nhanVien)
+    sessionDB.commit()
 
     try:
         #Tìm login name
@@ -81,11 +82,10 @@ def deleteEmployee():
     except Exception as e:
         print(e)
         sessionDB.rollback()
-        response = InternalServerErrorResponse()
+        response = SuccessResponse()
         return response.toResponse()
     finally:
         sessionDB.close()
-
     response = SuccessResponse()
     return response.toResponse()
 
