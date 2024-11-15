@@ -156,3 +156,29 @@ def getEmployee():
 
 
 
+@employee_blueprint.route('/getNVSan' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def getEmployeeSan():
+    identity = get_jwt_identity()
+    sessionDB = CommonUtiles.getSessionDB(identity)
+    nhanViens = sessionDB.query(NHANVIENSAN).all()
+
+    nhanVien_dicts = []
+    for nhanVien in nhanViens:
+        nhanVien_dict = {
+            "ID": nhanVien.ID,
+            "HO": nhanVien.HO,
+            "TEN": nhanVien.TEN,
+            "NGAYSINH": nhanVien.NGAYSINH.strftime("%Y-%m-%d %H:%M:%S") if nhanVien.NGAYSINH else None,
+            "DIACHI": nhanVien.DIACHI,
+            "GIOITINH": nhanVien.GIOITINH,
+            "SDT": nhanVien.SDT,
+        }
+        nhanVien_dicts.append(nhanVien_dict)
+
+    response = SuccessResponse(data=nhanVien_dicts)
+    return response.toResponse()
+
+
+
