@@ -132,6 +132,34 @@ def updatePrice():
     response = SuccessResponse()
     return response.toResponse()
 
+@price_blueprint.route('/getPriceNow' , methods=['POST','GET'])
+@handle_exceptions
+@jwt_required()
+def getPriceNow():
+    identity = get_jwt_identity()
+    sessionDB = CommonUtiles.getSessionDB(identity)
+
+    macp = request.json.get('macp')
+    latest_price = (
+        sessionDB.query(LICHSUGIA)
+        .filter(LICHSUGIA.IDCOPHIEU == macp)
+        .order_by(LICHSUGIA.NGAY.desc())
+        .first()
+    )
+    dataResponse = {
+        "price": 0,
+        "priceLow" : 0,
+        "priceHight" : 0
+    }
+    if not latest_price:
+        response = SuccessResponse(data=dataResponse)
+        return response.toResponse()
+    else:
+        dataResponse["price"] = latest_price.GIATHAMCHIEU
+        dataResponse["priceLow"] = latest_price.GIASAN
+        dataResponse["priceHight"] = latest_price.GIATRAN
+        response = SuccessResponse(data=dataResponse)
+        return response.toResponse()
 
 
 
