@@ -138,6 +138,7 @@ def updatePrice():
 def getPriceNow():
     identity = get_jwt_identity()
     sessionDB = CommonUtiles.getSessionDB(identity)
+    severName, role, userID, userName, passWord = CommonUtiles.getInfoLogin(identity)
 
     macp = request.json.get('macp')
     latest_price = (
@@ -146,11 +147,15 @@ def getPriceNow():
         .order_by(LICHSUGIA.NGAY.desc())
         .first()
     )
+    soCoPhieu = sessionDB.query(SOHUUCOPHIEU).filter(SOHUUCOPHIEU.MANDT == userID, SOHUUCOPHIEU.MACP == macp).first()
+
     dataResponse = {
         "price": 0,
         "priceLow" : 0,
-        "priceHight" : 0
+        "priceHight" : 0,
+        "maxSL" : 0,
     }
+
     if not latest_price:
         response = SuccessResponse(data=dataResponse)
         return response.toResponse()
@@ -158,6 +163,7 @@ def getPriceNow():
         dataResponse["price"] = latest_price.GIATHAMCHIEU
         dataResponse["priceLow"] = latest_price.GIASAN
         dataResponse["priceHight"] = latest_price.GIATRAN
+        dataResponse["maxSL"] = soCoPhieu.SOLUONG if soCoPhieu is not None else 0
         response = SuccessResponse(data=dataResponse)
         return response.toResponse()
 

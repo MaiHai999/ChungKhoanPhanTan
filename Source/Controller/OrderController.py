@@ -36,7 +36,7 @@ def addOrder():
         LOAILENH=loailenh,
         LOAIGD=loaigd,
         SOLUONG=soluong,
-        TRANGTHAI=None,
+        TRANGTHAI='CHO KHOP',
         NGAYDATLENH=ngaydatlenh,
         GIA=gia
     )
